@@ -33,12 +33,14 @@ import pickle
 # In[5]:
 
 
-train=pd.read_csv(r'D:\Spring 2022- Clark University\STAT 4650- Machine Learning\dataset\train.csv')
-test=pd.read_csv(r'D:\Spring 2022- Clark University\STAT 4650- Machine Learning\dataset\test.csv')
+train=pd.read_csv(r'...\train.csv')
+test=pd.read_csv(r'...\test.csv')
 
+
+
+# # Knowing Columns
 
 # In[7]:
-
 
 train.columns
 
@@ -49,6 +51,10 @@ train.columns
 X= train[['Gender', 'Age', 'Driving_License', 'Region_Code','Previously_Insured', 'Vehicle_Age','Vehicle_Damage', 'Annual_Premium','Policy_Sales_Channel', 'Vintage']]
 y= train['Response']
 
+
+
+
+# # Seprating categorial and numerical data in columns
 
 # In[11]:
 
@@ -70,6 +76,10 @@ print(cat)
 print(num)
 
 
+
+
+# # Transforming categorial data into numerical data by "Dummy variables" 
+
 # In[13]:
 
 
@@ -81,6 +91,8 @@ train =pd.get_dummies(train, columns=cat,drop_first=True)
 
 X = train.drop(['Response','Driving_License'], axis=1)
 y = train['Response']
+
+
 
 
 # ### Since data is imbalanced, we should make data balanced by SMOTE
@@ -100,27 +112,39 @@ print("Shape of X after over-Sampling:", X.shape)
 print("Shape of y after over-Sampling:", y.shape)
 
 
+
+
+
+# # Splitting data to test and train
+
 # In[22]:
 
 
 X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.25, random_state=43)
 
 
+
+
+# # Machine Learning modeling: 
+# # First Model: Naive Baye
+
 # In[25]:
 
 
-NB_model = GaussianNB()
-NB_model.fit(X_train, y_train)
+NB_m = GaussianNB()
+NB_m.fit(X_train, y_train)
 
 
 # In[26]:
 
 
-y_train_predict = NB_model.predict(X_train)
-model_score = NB_model.score(X_train, y_train)
+y_train_predict = NB_m.predict(X_train)
+model_score = NB_m.score(X_train, y_train)
 print(model_score)
 print(metrics.confusion_matrix(y_train, y_train_predict))
 print(metrics.classification_report(y_train, y_train_predict))
+
+
 
 
 # ### Cross-Validation on Naive Baye
@@ -129,18 +153,22 @@ print(metrics.classification_report(y_train, y_train_predict))
 
 
 from sklearn.model_selection import cross_val_score
-scores = cross_val_score(NB_model, X_train, y_train, cv=10)
+scores = cross_val_score(NB_m, X_train, y_train, cv=10)
 scores
 
 
 # In[29]:
 
 
-scores = cross_val_score(NB_model, X_test, y_test, cv=10)
+scores = cross_val_score(NB_m, X_test, y_test, cv=10)
 scores
 
 
-# # Random Forest
+
+
+
+
+# # Second Model: Random Forest
 
 # In[31]:
 
